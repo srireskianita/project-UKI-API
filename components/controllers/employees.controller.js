@@ -1,5 +1,6 @@
 'use strict';
 const MongoClient = require('mongodb').MongoClient;
+let ObjectID = require('mongodb').ObjectID;
 
 const config = require('../configurations/config');
 let dbo;
@@ -51,7 +52,7 @@ module.exports = exports = function (server, name) {
             let id = req.params.id;
             let entity = req.body;
             dbo = db.db(config.dbname);
-            await dbo.collection(name).update({ 'id': id }, entity, function (err, response) {
+            await dbo.collection(name).update({ '_id': ObjectID(id) }, entity, function (err, response) {
                 if (err) throw err;
                 res.send(200, response);
                 db.close();
@@ -64,7 +65,7 @@ module.exports = exports = function (server, name) {
             if (err) throw err;            
             let id = req.params.id;
             dbo = db.db(config.dbname);
-            await dbo.collection(name).deleteOne({ 'id': id}, function (err, response)  {
+            await dbo.collection(name).deleteOne({ '_id': ObjectID(id)}, function (err, response)  {
                 if (err) throw err;
                 res.send(200, response);
                 db.close();
